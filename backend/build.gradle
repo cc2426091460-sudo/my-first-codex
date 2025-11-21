@@ -1,0 +1,50 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.5' apply false
+    id 'io.spring.dependency-management' version '1.1.4' apply false
+    id 'java'
+    id 'com.diffplug.spotless' version '6.25.0'
+}
+
+group = 'com.example.app'
+version = '0.0.1-SNAPSHOT'
+
+def javaVersion = JavaLanguageVersion.of(17)
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        target 'modules/**/src/**/*.java'
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'checkstyle'
+
+    java {
+        toolchain {
+            languageVersion = javaVersion
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    checkstyle {
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        configProperties = ["suppressionFile": rootProject.file('config/checkstyle/suppressions.xml')]
+        toolVersion = '10.14.0'
+    }
+
+    dependencies {
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}

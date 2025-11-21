@@ -1,0 +1,2 @@
+-- Flyway baseline migration
+-- Add schema changes here.
